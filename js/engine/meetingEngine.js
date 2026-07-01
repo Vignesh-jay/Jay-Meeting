@@ -51,12 +51,15 @@ function processSentence(sentence, meeting) {
 
         case "action":
 
-            meeting.actions.push(
-                extractAction(
-                    speakerInfo.speaker,
-                    speakerInfo.text
-                )
+            const action = extractAction(
+                speakerInfo.speaker,
+                speakerInfo.text
             );
+
+            action.confidence = result.confidence;
+            action.matched = result.matched;
+
+            meeting.actions.push(action);
 
             break;
 
@@ -64,7 +67,9 @@ function processSentence(sentence, meeting) {
 
             meeting.decisions.push({
                 speaker: speakerInfo.speaker,
-                text: speakerInfo.text
+                text: speakerInfo.text,
+                confidence: result.confidence,
+                matched: result.matched
             });
 
             break;
@@ -73,7 +78,9 @@ function processSentence(sentence, meeting) {
 
             meeting.risks.push({
                 speaker: speakerInfo.speaker,
-                text: speakerInfo.text
+                text: speakerInfo.text,
+                confidence: result.confidence,
+                matched: result.matched
             });
 
             break;
@@ -82,7 +89,9 @@ function processSentence(sentence, meeting) {
 
             meeting.nextSteps.push({
                 speaker: speakerInfo.speaker,
-                text: speakerInfo.text
+                text: speakerInfo.text,
+                confidence: result.confidence,
+                matched: result.matched
             });
 
             break;
@@ -91,7 +100,9 @@ function processSentence(sentence, meeting) {
 
             meeting.discussion.push({
                 speaker: speakerInfo.speaker,
-                text: speakerInfo.text
+                text: speakerInfo.text,
+                confidence: result.confidence,
+                matched: result.matched
             });
 
     }

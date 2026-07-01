@@ -52,24 +52,23 @@ const RULES = {
 
 function classifySentence(sentence){
 
-    const scores = {
-
-        action:0,
-        decision:0,
-        risk:0,
-        nextStep:0
-
-    };
-
     const lower = sentence.toLowerCase();
 
-    Object.keys(RULES).forEach(type=>{
+    const scores = {};
+    const matches = {};
 
-        RULES[type].forEach(keyword=>{
+    Object.keys(RULES).forEach(type => {
+
+        scores[type] = 0;
+        matches[type] = [];
+
+        RULES[type].forEach(keyword => {
 
             if(lower.includes(keyword)){
 
                 scores[type]++;
+
+                matches[type].push(keyword);
 
             }
 
@@ -77,25 +76,38 @@ function classifySentence(sentence){
 
     });
 
-    let bestCategory = "discussion";
-    let highestScore = 0;
+    let category = "discussion";
+    let highest = 0;
 
-    Object.keys(scores).forEach(category=>{
+    Object.keys(scores).forEach(type => {
 
-        if(scores[category] > highestScore){
+        if(scores[type] > highest){
 
-            highestScore = scores[category];
-            bestCategory = category;
+            highest = scores[type];
+            category = type;
 
         }
 
     });
 
+    const maxKeywords = RULES[category]
+        ? RULES[category].length
+        : 1;
+
+    const confidence =
+        category === "discussion"
+            ? 0
+            : highest / maxKeywords;
+
     return{
 
-        category:bestCategory,
+        category,
 
-        score:highestScore
+        score: highest,
+
+        confidence,
+
+        matched: matches[category]
 
     };
 
