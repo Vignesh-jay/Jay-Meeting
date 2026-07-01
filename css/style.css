@@ -422,3 +422,70 @@ button:hover{
     }
 
 }
+
+#result h1{
+
+    font-size:32px;
+
+    margin-bottom:20px;
+
+}
+
+#result h2{
+
+    margin-top:30px;
+
+    margin-bottom:12px;
+
+    color:#8B5CF6;
+
+    border-bottom:1px solid #333;
+
+    padding-bottom:8px;
+
+}
+
+#result p{
+
+    margin-bottom:10px;
+
+}
+
+#result ul{
+
+    margin-left:20px;
+
+}
+
+#result li{
+
+    margin-bottom:8px;
+
+}
+.actionTable{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+    margin-top:15px;
+
+}
+
+.actionTable th{
+
+    text-align:left;
+
+    padding:12px;
+
+    background:#27272A;
+
+}
+
+.actionTable td{
+
+    padding:12px;
+
+    border-bottom:1px solid #333;
+
+}
