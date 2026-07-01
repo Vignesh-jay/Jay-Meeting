@@ -1,0 +1,305 @@
+/* ==========================================
+   JΛY Meeting v0.2
+========================================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+:root{
+
+    --bg:#09090B;
+    --card:#18181B;
+    --border:#2A2A2E;
+
+    --primary:#8B5CF6;
+    --primary-hover:#7C3AED;
+
+    --text:#FFFFFF;
+    --muted:#A1A1AA;
+
+}
+
+body{
+
+    font-family:Inter,Arial,Helvetica,sans-serif;
+
+    background:var(--bg);
+
+    color:var(--text);
+
+    min-height:100vh;
+
+}
+
+/* Background Glow */
+
+.background{
+
+    position:fixed;
+
+    width:700px;
+
+    height:700px;
+
+    border-radius:50%;
+
+    background:radial-gradient(circle,
+    rgba(139,92,246,.22),
+    transparent 70%);
+
+    top:-250px;
+
+    right:-250px;
+
+    z-index:-1;
+
+}
+
+/* Container */
+
+.container{
+
+    width:92%;
+
+    max-width:1000px;
+
+    margin:auto;
+
+    padding:50px 0;
+
+}
+
+/* Header */
+
+header{
+
+    text-align:center;
+
+    margin-bottom:40px;
+
+}
+
+.logo{
+
+    width:90px;
+
+    height:90px;
+
+    margin:auto;
+
+    margin-bottom:20px;
+
+    border-radius:24px;
+
+    background:linear-gradient(135deg,#8B5CF6,#6366F1);
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    font-size:34px;
+
+    font-weight:bold;
+
+    box-shadow:0 20px 50px rgba(139,92,246,.35);
+
+}
+
+header h1{
+
+    font-size:48px;
+
+}
+
+header p{
+
+    color:var(--muted);
+
+    margin-top:10px;
+
+}
+
+/* Card */
+
+.card{
+
+    background:rgba(24,24,27,.85);
+
+    border:1px solid var(--border);
+
+    border-radius:22px;
+
+    padding:28px;
+
+    margin-bottom:25px;
+
+    backdrop-filter:blur(20px);
+
+    transition:.25s;
+
+}
+
+.card:hover{
+
+    transform:translateY(-3px);
+
+}
+
+/* Headings */
+
+h2{
+
+    margin-bottom:20px;
+
+}
+
+/* Form */
+
+label{
+
+    display:block;
+
+    margin-top:20px;
+
+    margin-bottom:8px;
+
+    color:var(--muted);
+
+}
+
+input,
+textarea{
+
+    width:100%;
+
+    padding:14px;
+
+    border-radius:12px;
+
+    border:1px solid var(--border);
+
+    background:#27272A;
+
+    color:white;
+
+    outline:none;
+
+    transition:.2s;
+
+}
+
+input:focus,
+textarea:focus{
+
+    border-color:var(--primary);
+
+}
+
+textarea{
+
+    height:280px;
+
+    resize:vertical;
+
+}
+
+/* Button */
+
+button{
+
+    margin-top:25px;
+
+    width:100%;
+
+    padding:16px;
+
+    border:none;
+
+    border-radius:14px;
+
+    background:var(--primary);
+
+    color:white;
+
+    font-size:16px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.2s;
+
+}
+
+button:hover{
+
+    background:var(--primary-hover);
+
+}
+
+/* Result */
+
+.result-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:20px;
+
+}
+
+#copyBtn{
+
+    width:auto;
+
+    margin:0;
+
+    padding:10px 18px;
+
+    font-size:14px;
+
+}
+
+#result{
+
+    white-space:pre-wrap;
+
+    line-height:1.8;
+
+}
+
+/* Mobile */
+
+@media(max-width:700px){
+
+    .container{
+
+        width:95%;
+
+    }
+
+    header h1{
+
+        font-size:36px;
+
+    }
+
+    .logo{
+
+        width:70px;
+
+        height:70px;
+
+        font-size:26px;
+
+    }
+
+}
