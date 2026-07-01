@@ -3,108 +3,101 @@
 // ======================================
 
 function analyseMeeting(transcript) {
+  const sentences = getSentences(transcript);
 
-    const sentences = getSentences(transcript);
+  const meeting = {
+    totalSentences: sentences.length,
 
-    const meeting = {
+    discussion: [],
 
-        totalSentences: sentences.length,
+    decisions: [],
 
-        discussion: [],
+    actions: [],
 
-        decisions: [],
+    risks: [],
 
-        actions: [],
+    nextSteps: [],
 
-        risks: [],
+    summary: "",
+  };
 
-        nextSteps: [],
+  sentences.forEach((sentence) => {
+    processSentence(sentence, meeting);
+  });
 
-        summary: ""
+  meeting.summary = buildSummary(
+    sentences,
+    meeting.decisions,
+    meeting.actions,
+    meeting.nextSteps,
+  );
 
-    };
-
-    sentences.forEach(sentence => {
-
-        processSentence(sentence, meeting);
-
-    });
-
-    meeting.summary = buildSummary(
-        sentences,
-        meeting.decisions,
-        meeting.actions,
-        meeting.nextSteps
-    );
-
-    return meeting;
-
+  return meeting;
 }
 
 function processSentence(sentence, meeting) {
 
     const speakerInfo = detectSpeaker(sentence);
 
-    const result = classifySentence(speakerInfo.text);
+    const topic = detectTopic(
+        speakerInfo.text
+    );
 
-    switch (result.category) {
+    const result = classifySentence(
+        speakerInfo.text
+    );
+  switch (result.category) {
+    case "action":
+      const action = extractAction(speakerInfo.speaker, speakerInfo.text);
 
-        case "action":
+      action.confidence = result.confidence;
+      action.matched = result.matched;
+      action.topic = topic;
 
-            const action = extractAction(
-                speakerInfo.speaker,
-                speakerInfo.text
-            );
+      meeting.actions.push(action);
 
-            action.confidence = result.confidence;
-            action.matched = result.matched;
+      break;
 
-            meeting.actions.push(action);
+    case "decision":
+      meeting.decisions.push({
+        speaker: speakerInfo.speaker,
+        text: speakerInfo.text,
+        confidence: result.confidence,
+        matched: result.matched,
+        topic: topic,
+      });
 
-            break;
+      break;
 
-        case "decision":
+    case "risk":
+      meeting.risks.push({
+        speaker: speakerInfo.speaker,
+        text: speakerInfo.text,
+        confidence: result.confidence,
+        matched: result.matched,
+        topic: topic,
+      });
 
-            meeting.decisions.push({
-                speaker: speakerInfo.speaker,
-                text: speakerInfo.text,
-                confidence: result.confidence,
-                matched: result.matched
-            });
+      break;
 
-            break;
+    case "nextStep":
+      meeting.nextSteps.push({
+        speaker: speakerInfo.speaker,
+        text: speakerInfo.text,
+        confidence: result.confidence,
+        matched: result.matched,
+        topic: topic,
+      });
 
-        case "risk":
+      break;
 
-            meeting.risks.push({
-                speaker: speakerInfo.speaker,
-                text: speakerInfo.text,
-                confidence: result.confidence,
-                matched: result.matched
-            });
-
-            break;
-
-        case "nextStep":
-
-            meeting.nextSteps.push({
-                speaker: speakerInfo.speaker,
-                text: speakerInfo.text,
-                confidence: result.confidence,
-                matched: result.matched
-            });
-
-            break;
-
-        default:
-
-            meeting.discussion.push({
-                speaker: speakerInfo.speaker,
-                text: speakerInfo.text,
-                confidence: result.confidence,
-                matched: result.matched
-            });
-
-    }
-
+    default:
+      meeting.discussion.push({
+        speaker: speakerInfo.speaker,
+        text: speakerInfo.text,
+        topic: topic,
+        confidence: result.confidence,
+        matched: result.matched,
+      });
+  }
 }

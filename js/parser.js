@@ -3,152 +3,112 @@
 // ============================================
 
 function getSentences(text) {
-
-    return text
-        .replace(/\r/g, "")
-        .replace(/\n+/g, " ")
-        .split(/[.!?]+/)
-        .map(sentence => sentence.trim())
-        .filter(sentence => sentence.length > 0);
-
+  return text
+    .replace(/\r/g, "")
+    .replace(/\n+/g, " ")
+    .split(/[.!?]+/)
+    .map((sentence) => sentence.trim())
+    .filter((sentence) => sentence.length > 0);
 }
 
 // ============================================
 
 function parseDecisions(sentences) {
+  const decisions = [];
 
-    const decisions = [];
+  const decisionPatterns = [
+    /\bdecision:/i,
 
-    const decisionPatterns = [
+    /\bapproved\b/i,
 
-        /\bdecision:/i,
+    /\bagreed\b/i,
 
-        /\bapproved\b/i,
+    /\baccepted\b/i,
 
-        /\bagreed\b/i,
+    /\bconfirmed\b/i,
 
-        /\baccepted\b/i,
+    /\bfinalized\b/i,
 
-        /\bconfirmed\b/i,
+    /\bcompleted\b/i,
 
-        /\bfinalized\b/i,
+    /\bclosed\b/i,
 
-        /\bcompleted\b/i,
+    /\bresolved\b/i,
+  ];
 
-        /\bclosed\b/i,
+  sentences.forEach((sentence) => {
+    const match = decisionPatterns.some((pattern) => pattern.test(sentence));
 
-        /\bresolved\b/i
+    if (match) {
+      decisions.push(sentence.replace(/^decision:/i, "").trim());
+    }
+  });
 
-    ];
-
-    sentences.forEach(sentence => {
-
-        const match = decisionPatterns.some(pattern =>
-            pattern.test(sentence)
-        );
-
-        if (match) {
-
-            decisions.push(
-                sentence.replace(/^decision:/i, "").trim()
-            );
-
-        }
-
-    });
-
-    return decisions;
-
+  return decisions;
 }
 
 // ============================================
 
 function parseActions(sentences) {
+  const actions = [];
 
-    const actions = [];
+  const actionPatterns = [
+    /\baction:/i,
 
-    const actionPatterns = [
+    /\bwill\b/i,
 
-        /\baction:/i,
+    /\bshall\b/i,
 
-        /\bwill\b/i,
+    /\bneed to\b/i,
 
-        /\bshall\b/i,
+    /\bhas to\b/i,
 
-        /\bneed to\b/i,
+    /\bmust\b/i,
 
-        /\bhas to\b/i,
+    /\blet'?s\b/i,
 
-        /\bmust\b/i,
+    /\bprepare\b/i,
 
-        /\blet'?s\b/i,
+    /\bsend\b/i,
 
-        /\bprepare\b/i,
+    /\bcontact\b/i,
 
-        /\bsend\b/i,
+    /\bfollow up\b/i,
 
-        /\bcontact\b/i,
+    /\bcomplete\b/i,
 
-        /\bfollow up\b/i,
+    /\bsubmit\b/i,
+  ];
 
-        /\bcomplete\b/i,
+  sentences.forEach((sentence) => {
+    const match = actionPatterns.some((pattern) => pattern.test(sentence));
 
-        /\bsubmit\b/i
+    if (match) {
+      actions.push(sentence.replace(/^action:/i, "").trim());
+    }
+  });
 
-    ];
-
-    sentences.forEach(sentence => {
-
-        const match = actionPatterns.some(pattern =>
-            pattern.test(sentence)
-        );
-
-        if (match) {
-
-            actions.push(
-                sentence.replace(/^action:/i, "").trim()
-            );
-
-        }
-
-    });
-
-    return actions;
-
+  return actions;
 }
 
 // ============================================
 
 function parseNextSteps(sentences) {
+  const nextSteps = [];
 
-    const nextSteps = [];
+  sentences.forEach((sentence) => {
+    if (sentence.toLowerCase().startsWith("next meeting:")) {
+      nextSteps.push(sentence.replace(/next meeting:/i, "").trim());
+    }
+  });
 
-    sentences.forEach(sentence => {
-
-        if (sentence.toLowerCase().startsWith("next meeting:")) {
-
-            nextSteps.push(
-                sentence.replace(/next meeting:/i, "").trim()
-            );
-
-        }
-
-    });
-
-    return nextSteps;
-
+  return nextSteps;
 }
 
 // ============================================
 
-function buildSummary(
-    sentences,
-    decisions,
-    actions,
-    nextSteps
-){
-
-    return `
+function buildSummary(sentences, decisions, actions, nextSteps) {
+  return `
 
 ${sentences.length} sentence(s) analysed.
 
@@ -159,45 +119,38 @@ ${actions.length} action item(s)
 ${nextSteps.length} next step(s)
 
 `;
-
 }
 
 // ============================================
 
-function extractAction(speaker, text){
+function extractAction(speaker, text) {
+  let task = text.trim();
 
-    let task = text.trim();
+  // Remove common prefixes
 
-    // Remove common prefixes
+  task = task.replace(/^I'll\s+/i, "");
 
-    task = task.replace(/^I'll\s+/i, "");
+  task = task.replace(/^I will\s+/i, "");
 
-    task = task.replace(/^I will\s+/i, "");
+  task = task.replace(/^We will\s+/i, "");
 
-    task = task.replace(/^We will\s+/i, "");
+  task = task.replace(/^Let's\s+/i, "");
 
-    task = task.replace(/^Let's\s+/i, "");
+  task = task.replace(/^Need to\s+/i, "");
 
-    task = task.replace(/^Need to\s+/i, "");
+  task = task.replace(/^Must\s+/i, "");
 
-    task = task.replace(/^Must\s+/i, "");
+  task = task.replace(/^Should\s+/i, "");
 
-    task = task.replace(/^Should\s+/i, "");
+  return {
+    owner: speaker || "Unassigned",
 
-    return {
-
-        owner: speaker || "Unassigned",
-
-        task: task
-
-    };
-
+    task: task,
+  };
 }
 
 // ============================================
 
-function parseTranscript(text){
-
-    return analyseMeeting(text);
-
+function parseTranscript(text) {
+  return analyseMeeting(text);
 }
